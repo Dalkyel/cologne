@@ -664,6 +664,142 @@
       margin-bottom: 36px;
     }
 
+    /* ── Tips ───────────────────────────────── */
+    .placement-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .placement-item {
+      display: grid;
+      grid-template-columns: 10px 1fr auto;
+      gap: 10px 12px;
+      align-items: start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .placement-item.avoid {
+      opacity: 0.6;
+    }
+
+    .placement-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .placement-dot.avoid {
+      background: none;
+      border: 1.5px solid var(--text-faint);
+    }
+
+    .placement-zone {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .placement-why {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .placement-best {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      text-align: right;
+      white-space: nowrap;
+      padding-top: 3px;
+    }
+
+    .tips-sub {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin: 20px 0 10px;
+    }
+
+    .spray-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .spray-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .spray-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 5px;
+    }
+
+    .spray-count {
+      font-size: 24px;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .spray-note {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .rules-list {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .rule-item {
+      background: var(--surface);
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rule-item:last-child { border-bottom: none; }
+
+    .rule-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .rule-body {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
     /* ── Location ───────────────────────────── */
     .location-refresh {
       background: none;
@@ -724,6 +860,7 @@
   <div id="weather-zone"><div class="skeleton"></div></div>
   <div id="reco-zone"></div>
   <div id="layering-zone"></div>
+  <div id="tips-zone"></div>
   <div id="collection-zone"></div>
 
 </div>
@@ -740,9 +877,9 @@ const FRAGS = [
     conc: 'EDP',
     family: 'Woody Aromatic',
     tag: 'YEAR-ROUND WORKHORSE',
-    top:   'Grapefruit · Lemon · Mint · Pink Pepper',
-    heart: 'Ginger · Iso E Super · Nutmeg · Jasmine',
-    base:  'Labdanum · Sandalwood · Patchouli · Vetiver · Incense · Cedar · White Musk',
+    top:   'Grapefruit · Lemon · Mint · Bergamot · Pink Pepper · Coriander · Aldehydes',
+    heart: 'Ginger · Nutmeg · Jasmine · Melon',
+    base:  'Labdanum · Sandalwood · Patchouli · Incense · Cedar · Amberwood',
     spray: '2–3 sprays on skin. Midday heat: 2 is enough — humidity carries it.',
     verdict: 'Your #1 daily driver in Pereira. Citrus-forward opening thrives in heat.',
   },
@@ -1316,6 +1453,74 @@ function toggleAllLayers() {
   document.getElementById('all-layers-btn').classList.toggle('open');
 }
 
+function renderTips() {
+  const placements = [
+    { zone: 'Chest / Sternum',  why: 'Trapped under clothing, released with movement. Best longevity on skin.',  best: 'Office · All-day',   avoid: false },
+    { zone: 'Inner Elbow',      why: 'Sheltered warmth — outlasts exposed pulse points by hours.',               best: 'Casual · All-day',  avoid: false },
+    { zone: 'Back of Neck',     why: 'At nose level in conversation. Subtle, sustained trail as you move.',      best: 'Social · Everyday', avoid: false },
+    { zone: 'Behind Ears',      why: 'Warm and discreet — especially effective for lighter EDTs.',               best: 'Light daily use',   avoid: false },
+    { zone: 'Inner Wrist',      why: 'Friction + frequent washing kills longevity. Most popular, least effective.', best: 'Avoid as primary', avoid: true },
+  ];
+
+  const sprays = [
+    { label: 'Office',      count: '1–2', note: 'Chest under shirt' },
+    { label: 'Casual day',  count: '2',   note: 'Neck + chest' },
+    { label: 'Evening out', count: '2–3', note: 'Neck + chest + elbow' },
+    { label: 'Night out',   count: '3–4', note: 'Hard ceiling. Never exceed 4.' },
+  ];
+
+  const rules = [
+    { title: "Don't rub your wrists together",          body: "Friction accelerates evaporation of top notes and skips the opening. Spray from 5–6 inches, let it air-dry." },
+    { title: "Don't spray a cloud and walk through it", body: "Most mist evaporates in the air before reaching skin. Spray directly onto skin from 5–6 inches away." },
+    { title: "Fabric outlasts skin",                    body: "Natural fibers hold fragrance 24–48 hrs vs 2–8 hrs on skin. One collar spray outlasts two wrist applications." },
+    { title: "Moisturize before applying",              body: "Dry skin retains fragrance poorly. Unscented lotion before spraying extends longevity noticeably." },
+    { title: "You go nose-blind in 15–20 min",          body: "Your brain stops detecting your own scent — others still can. Don't compensate by adding more sprays." },
+    { title: "Store away from the bathroom",            body: "Heat and humidity degrade cologne 30% faster. Cool, dark drawer or closet shelf preserves quality." },
+  ];
+
+  const placementHTML = placements.map(p => `
+    <div class="placement-item ${p.avoid ? 'avoid' : ''}">
+      <div class="placement-dot ${p.avoid ? 'avoid' : ''}"></div>
+      <div>
+        <div class="placement-zone">${p.zone}</div>
+        <div class="placement-why">${p.why}</div>
+      </div>
+      <div class="placement-best">${p.best}</div>
+    </div>
+  `).join('');
+
+  const sprayHTML = sprays.map(s => `
+    <div class="spray-item">
+      <div class="spray-label">${s.label}</div>
+      <div class="spray-count">${s.count}</div>
+      <div class="spray-note">${s.note}</div>
+    </div>
+  `).join('');
+
+  const rulesHTML = rules.map(r => `
+    <div class="rule-item">
+      <div class="rule-title">${r.title}</div>
+      <div class="rule-body">${r.body}</div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="section-eyebrow">Application</div>
+    <div class="section-title">How to wear</div>
+
+    <div class="tips-sub">Placement — best to worst</div>
+    <div class="placement-list">${placementHTML}</div>
+
+    <div class="tips-sub">Sprays by occasion</div>
+    <div class="spray-grid">${sprayHTML}</div>
+
+    <div class="tips-sub">Six rules</div>
+    <div class="rules-list">${rulesHTML}</div>
+
+    <div class="divider"></div>
+  `;
+}
+
 function renderCollection() {
   const rows = FRAGS.map(f => `
     <div class="frag-row" onclick="toggleRow('${f.id}')" id="row-${f.id}">
@@ -1471,6 +1676,7 @@ async function init() {
     weatherZone.innerHTML  = renderWeather(w, loc);
     recoZone.innerHTML     = renderReco(ctx, loc);
     layeringZone.innerHTML = renderLayering(ctx.id);
+    document.getElementById('tips-zone').innerHTML = renderTips();
     collZone.innerHTML     = renderCollection();
 
   } catch (err) {
@@ -1482,6 +1688,7 @@ async function init() {
       </div>
     `;
     layeringZone.innerHTML = renderLayering('afternoon');
+    document.getElementById('tips-zone').innerHTML = renderTips();
     collZone.innerHTML     = renderCollection();
   }
 }
@@ -1491,6 +1698,7 @@ function refresh() {
   document.getElementById('weather-zone').innerHTML = '<div class="skeleton"></div>';
   document.getElementById('reco-zone').innerHTML = '';
   document.getElementById('layering-zone').innerHTML = '';
+  document.getElementById('tips-zone').innerHTML = '';
   init();
 }
 
