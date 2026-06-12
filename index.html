@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cologne Advisor · Pereira</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --surface-2: #1e1e1e;
+      --surface-warm: #1a1810;
+      --surface-green: #101810;
+      --border: #2a2a2a;
+      --border-warm: #3a3020;
+      --border-green: #1e3020;
+      --gold: #c8a96e;
+      --gold-dim: #6a5530;
+      --green: #4a8a5a;
+      --green-dim: #243420;
+      --text: #e8e0d4;
+      --text-dim: #888880;
+      --text-faint: #484844;
+      --red: #d05050;
+      --blue: #6090b8;
+      --orange: #c07840;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+      line-height: 1.4;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    header {
+      padding: 52px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 36px;
+    }
+
+    .header-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .header-title {
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: -0.025em;
+      color: var(--text);
+    }
+
+    .header-sub {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    /* ── Weather card ───────────────────────── */
+    .weather-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 36px;
+    }
+
+    .weather-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .w-stat { text-align: center; }
+
+    .w-stat .val {
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .w-stat .val sup {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-dim);
+      vertical-align: super;
+    }
+
+    .w-stat .lbl {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-top: 5px;
+    }
+
+    .weather-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .weather-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--gold);
+    }
+
+    .weather-dot.rain { background: var(--blue); }
+
+    .weather-updated {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+
+    /* ── Section headings ───────────────────── */
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    /* ── Recommendation cards ───────────────── */
+    .reco-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .reco-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .reco-card.top-pick {
+      background: var(--surface-warm);
+      border-color: var(--gold-dim);
+    }
+
+    .reco-main { flex: 1; min-width: 0; }
+
+    .reco-name {
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 1px;
+    }
+
+    .reco-house {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .reco-spray {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .reco-verdict {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    .reco-score {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .reco-score .num {
+      font-size: 26px;
+      font-weight: 200;
+      letter-spacing: -0.04em;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .reco-score .denom {
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+
+    .reco-score .conc {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-top: 4px;
+    }
+
+    /* ── Tip ────────────────────────────────── */
+    .tip-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold-dim);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* ── Avoid ──────────────────────────────── */
+    .avoid-row {
+      margin-bottom: 40px;
+    }
+
+    .avoid-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+
+    .avoid-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .avoid-tag {
+      background: #180e0e;
+      border: 1px solid #321a1a;
+      color: #b06060;
+      border-radius: 6px;
+      padding: 5px 11px;
+      font-size: 12px;
+    }
+
+    /* ── Divider ────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 36px;
+    }
+
+    /* ── Layering section ───────────────────── */
+    .layer-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .layer-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .layer-card.featured {
+      background: var(--surface-green);
+      border-color: var(--border-green);
+    }
+
+    .layer-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 20px 14px;
+    }
+
+    .layer-name {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .layer-frags {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .layer-pill {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .layer-pill .conc {
+      color: var(--text-faint);
+      font-size: 10px;
+      margin-left: 3px;
+    }
+
+    .layer-plus {
+      font-size: 13px;
+      color: var(--text-faint);
+      font-weight: 300;
+    }
+
+    .layer-score-block {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .layer-score {
+      font-size: 22px;
+      font-weight: 200;
+      letter-spacing: -0.04em;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .layer-score span {
+      font-size: 10px;
+      color: var(--text-faint);
+    }
+
+    .layer-body {
+      padding: 14px 20px 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .layer-context-chip {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin-bottom: 10px;
+    }
+
+    .layer-ratio {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 5px;
+      letter-spacing: 0.01em;
+      line-height: 1.5;
+    }
+
+    .layer-order {
+      font-size: 11px;
+      color: var(--text-faint);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .layer-result {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .layer-pereira {
+      font-size: 12px;
+      color: var(--text-faint);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ── All combos toggle ──────────────────── */
+    .all-layers-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-dim);
+      user-select: none;
+      transition: background 0.12s;
+      margin-bottom: 0;
+    }
+
+    .all-layers-btn:hover { background: var(--surface-2); }
+
+    .all-layers-btn .chevron {
+      font-size: 11px;
+      color: var(--text-faint);
+      transition: transform 0.2s ease;
+    }
+
+    .all-layers-btn.open .chevron { transform: rotate(180deg); }
+
+    .all-layers-body {
+      display: none;
+      padding-top: 10px;
+    }
+
+    .all-layers-btn.open + .all-layers-body { display: block; }
+
+    /* ── Never layer ────────────────────────── */
+    .never-layer {
+      margin-top: 10px;
+      background: #130a0a;
+      border: 1px solid #281212;
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .never-layer-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+
+    .never-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1e0e0e;
+      align-items: baseline;
+    }
+
+    .never-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .never-names {
+      font-size: 12px;
+      font-weight: 600;
+      color: #904040;
+      white-space: nowrap;
+    }
+
+    .never-reason {
+      font-size: 12px;
+      color: #583030;
+      line-height: 1.5;
+    }
+
+    /* ── Collection ─────────────────────────── */
+    .collection {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .frag-row {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.12s ease;
+      user-select: none;
+    }
+
+    .frag-row:last-child { border-bottom: none; }
+    .frag-row:hover { background: var(--surface-2); }
+
+    .frag-row-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+    }
+
+    .tier {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .tier-S { background: #221a08; color: #c8a96e; border: 1px solid #5a4020; }
+    .tier-A { background: #0e1820; color: #7090b0; border: 1px solid #2a4060; }
+    .tier-B { background: #1c1408; color: #c07840; border: 1px solid #503010; }
+    .tier-C { background: #141414; color: #686860; border: 1px solid #282828; }
+    .tier-D { background: #180e0e; color: #a04040; border: 1px solid #381818; }
+
+    .frag-info { flex: 1; min-width: 0; }
+
+    .frag-name {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .frag-house {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 1px;
+    }
+
+    .frag-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .frag-rating {
+      font-size: 18px;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      color: var(--text-dim);
+    }
+
+    .frag-rating span { font-size: 11px; color: var(--text-faint); }
+
+    .frag-conc {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .frag-chevron {
+      color: var(--text-faint);
+      font-size: 12px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .frag-row.open .frag-chevron { transform: rotate(180deg); }
+
+    .frag-detail {
+      display: none;
+      padding: 0 20px 20px 64px;
+      border-top: 1px solid var(--border);
+    }
+
+    .frag-row.open .frag-detail { display: block; }
+
+    .frag-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin: 14px 0 14px;
+    }
+
+    .notes-table {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 5px 12px;
+      margin-bottom: 14px;
+    }
+
+    .note-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      padding-top: 2px;
+    }
+
+    .note-val {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .frag-verdict-text {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .frag-spray-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gold);
+      line-height: 1.5;
+    }
+
+    /* ── States ─────────────────────────────── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 10px;
+      height: 140px;
+      margin-bottom: 36px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .error-card {
+      background: #180e0e;
+      border: 1px solid #321a1a;
+      border-radius: 12px;
+      padding: 20px;
+      color: #b06060;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    /* ── Location ───────────────────────────── */
+    .location-refresh {
+      background: none;
+      border: none;
+      color: var(--text-faint);
+      cursor: pointer;
+      font-size: 15px;
+      padding: 0 0 0 5px;
+      vertical-align: middle;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .location-refresh:hover { color: var(--gold); }
+
+    .away-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface-warm);
+      border: 1px solid var(--border-warm);
+      border-radius: 4px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      margin-left: 8px;
+    }
+
+    .alt-note {
+      font-size: 11px;
+      color: var(--text-faint);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      line-height: 1.5;
+    }
+
+    /* ── Responsive ─────────────────────────── */
+    @media (max-width: 480px) {
+      .weather-stats { grid-template-columns: repeat(2, 1fr); }
+      .header-title { font-size: 26px; }
+      .frag-detail { padding-left: 20px; }
+      .layer-frags { gap: 5px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="header-eyebrow">Cologne Advisor</div>
+    <div class="header-title">What to wear today</div>
+    <div class="header-sub">Live weather · <span id="location-name">detecting…</span><button class="location-refresh" onclick="refresh()" title="Refresh location">↻</button></div>
+  </header>
+
+  <div id="weather-zone"><div class="skeleton"></div></div>
+  <div id="reco-zone"></div>
+  <div id="layering-zone"></div>
+  <div id="collection-zone"></div>
+
+</div>
+
+<script>
+/* ─── Fragrance data ─────────────────────────────────────── */
+const FRAGS = [
+  {
+    id: 'bleu-de-chanel',
+    name: 'Bleu de Chanel',
+    house: 'Chanel',
+    tier: 'S',
+    rating: 9,
+    conc: 'EDP',
+    family: 'Woody Aromatic',
+    tag: 'YEAR-ROUND WORKHORSE',
+    top:   'Grapefruit · Lemon · Mint · Pink Pepper',
+    heart: 'Ginger · Iso E Super · Nutmeg · Jasmine',
+    base:  'Labdanum · Sandalwood · Patchouli · Vetiver · Incense · Cedar · White Musk',
+    spray: '2–3 sprays on skin. Midday heat: 2 is enough — humidity carries it.',
+    verdict: 'Your #1 daily driver in Pereira. Citrus-forward opening thrives in heat.',
+  },
+  {
+    id: 'starwalker',
+    name: 'Starwalker',
+    house: 'Montblanc',
+    tier: 'A',
+    rating: 9,
+    conc: 'EDT',
+    family: 'Woody Spicy',
+    tag: 'PEREIRA EVERYDAY GEM',
+    top:   'Bamboo · Bergamot · Mandarin Orange',
+    heart: 'White Musk · Sandalwood · Cedar',
+    base:  'Ginger · Fir Resin · Nutmeg · Amber',
+    spray: '3–4 sprays. EDT concentration behaves beautifully in humidity.',
+    verdict: 'Underrated Pereira star. Bamboo and ginger thrive in tropical heat.',
+  },
+  {
+    id: 'vibrant-leather',
+    name: 'Vibrant Leather',
+    house: 'Zara',
+    tier: 'S',
+    rating: 8,
+    conc: 'EDP',
+    family: 'Leather / Fruity',
+    tag: 'DAY-FRIENDLY LEATHER',
+    top:   'Bergamot · Lemon',
+    heart: 'Leather · Bamboo',
+    base:  'Patchouli · Papyrus',
+    spray: '3–4 sprays on skin + 1–2 on fabric.',
+    verdict: 'Surprisingly heat-friendly. Humidity fixes its normally weak performance.',
+  },
+  {
+    id: 'sauvage-edp',
+    name: 'Sauvage',
+    house: 'Dior',
+    tier: 'A',
+    rating: 8,
+    conc: 'EDP',
+    family: 'Aromatic Fougère',
+    tag: 'MORNING / OFFICE',
+    top:   'Bergamot',
+    heart: 'Sichuan Pepper · Lavender · Star Anise · Nutmeg',
+    base:  'Ambroxan · Vanilla',
+    spray: '2 sprays only. Ambroxan + humidity = sillage bomb.',
+    verdict: 'Highly wearable but spray with restraint. Ambroxan runs hot in Pereira.',
+  },
+  {
+    id: 'ombre-leather',
+    name: 'Ombré Leather',
+    house: 'Tom Ford',
+    tier: 'S',
+    rating: 6,
+    conc: 'EDP',
+    family: 'Leather / Oriental',
+    tag: 'EVENINGS / AC SPACES',
+    top:   'Cardamom',
+    heart: 'Jasmine Sambac · Suede Leather',
+    base:  'Moss · Amber · Patchouli · Vetiver',
+    spray: '1–2 sprays on fabric only — chest/collar. Never bare skin in heat.',
+    verdict: 'Night & AC only. Pereira\'s heat turns this nuclear.',
+  },
+  {
+    id: 'man-in-black',
+    name: 'Man in Black',
+    house: 'Bvlgari',
+    tier: 'B',
+    rating: 4,
+    conc: 'EDP',
+    family: 'Leather / Oriental',
+    tag: 'AC / SPECIAL OCCASION',
+    top:   'Spices · Rum · Tobacco',
+    heart: 'Leather · Iris · Tuberose',
+    base:  'Guaiac Wood · Tonka Bean · Benzoin',
+    spray: '1–2 sprays on fabric only. Benzoin and tonka bloom dramatically in heat.',
+    verdict: 'AC-dependent. Punishes you if worn outdoors in the heat.',
+  },
+  {
+    id: 'cdnu',
+    name: 'Club de Nuit Untold',
+    house: 'Armaf',
+    tier: 'C',
+    rating: 5,
+    conc: 'EDP',
+    family: 'Amber / Oriental',
+    tag: 'LAYERING / EVENINGS',
+    top:   'Saffron · Jasmine',
+    heart: 'Amberwood · Ambergris',
+    base:  'Fir Resin · Cedar',
+    spray: '1 spray as a base layer. Not solo in daytime heat.',
+    verdict: 'A layering tool in Pereira, not a solo daytime option.',
+  },
+  {
+    id: 'amber-leather',
+    name: 'Amber & Leather',
+    house: 'Maison Alhambra',
+    tier: 'C',
+    rating: 5,
+    conc: 'EDP',
+    family: 'Leather / Oriental',
+    tag: 'CASUAL EVENINGS / AC',
+    top:   'Cardamom',
+    heart: 'Leather · Jasmine Sambac',
+    base:  'Amber · Patchouli · Moss',
+    spray: '1–2 sprays on fabric. Shorter longevity works in its favour here.',
+    verdict: 'Your "sacrifice" leather for casual evenings — preserve the Tom Ford.',
+  },
+  {
+    id: 'sauvage-elixir',
+    name: 'Sauvage Elixir',
+    house: 'Dior',
+    tier: 'B',
+    rating: 3,
+    conc: 'Elixir',
+    family: 'Aromatic / Spicy Amber',
+    tag: 'EXTREME CAUTION — COLD NIGHTS ONLY',
+    top:   'Nutmeg · Cinnamon · Cardamom · Grapefruit',
+    heart: 'Lavender',
+    base:  'Licorice · Sandalwood · Amber · Patchouli · Haitian Vetiver',
+    spray: '1 spray on fabric only. Never more than 1 in Pereira.',
+    verdict: 'Almost unwearable here. Reserve for rare cool nights (14–16°C) only.',
+  },
+  {
+    id: 'dior-homme-intense',
+    name: 'Dior Homme Intense',
+    house: 'Dior',
+    tier: 'D',
+    rating: 4,
+    conc: 'EDP',
+    family: 'Woody Floral Musk',
+    tag: 'COOL RAINY MORNINGS ONLY',
+    top:   'Lavender',
+    heart: 'Iris · Ambrette · Pear',
+    base:  'Vetiver · Virginia Cedar',
+    spray: '1–2 sprays on fabric. Iris-pear needs cool air to stay elegant.',
+    verdict: 'Pereira\'s occasional cool rainy mornings are its only natural habitat.',
+  },
+];
+
+/* ─── Layering combos ────────────────────────────────────── */
+const LAYERINGS = [
+  {
+    id: 'pereira-daily',
+    name: 'The Pereira Daily',
+    fragrances: ['bleu-de-chanel', 'vibrant-leather'],
+    ratio: '2 sprays BdC : 1 spray VL — both on skin',
+    order: 'BdC first, VL on top',
+    result: 'BdC\'s citrus-woody structure picks up VL\'s bright leather note. Versatile, heat-friendly, and wearable from 8am through late afternoon.',
+    pereira: 'Both fragrances are heat-tolerant. The most reliable all-day combo in the collection.',
+    contextLabel: 'Any time · All day',
+    contexts: ['hot-sunny', 'morning', 'afternoon', 'warm-rainy'],
+    rating: 9,
+  },
+  {
+    id: 'restrained-sauvage',
+    name: 'The Restrained Sauvage',
+    fragrances: ['sauvage-edp', 'starwalker'],
+    ratio: '1 spray Sauvage : 2 sprays Starwalker — both on skin',
+    order: 'Starwalker first as the base, Sauvage on top',
+    result: 'Starwalker\'s bamboo-ginger softens Sauvage\'s aggressive Ambroxan and grounds it in a quieter woody register. Keeps Sauvage wearable all day without the sillage bomb.',
+    pereira: 'Reverses the usual ratio. Sauvage leads too hard solo in Pereira — Starwalker reins it in. Smart office combo.',
+    contextLabel: 'Morning · Office',
+    contexts: ['morning', 'afternoon', 'warm-rainy'],
+    rating: 9,
+  },
+  {
+    id: 'tropical-duo',
+    name: 'The Tropical Duo',
+    fragrances: ['starwalker', 'vibrant-leather'],
+    ratio: '2 sprays Starwalker : 2 sprays VL — both on skin',
+    order: 'Starwalker first, Vibrant Leather on top',
+    result: 'Shared bamboo note reinforced between both fragrances. Ginger from Starwalker energises the leather accord. Clean, heat-adapted, and inherently tropical.',
+    pereira: 'The outdoor and gym combo. Both fragrances are made for warm climates — this is their natural habitat.',
+    contextLabel: 'Hot days · Outdoor · Gym',
+    contexts: ['hot-sunny', 'morning'],
+    rating: 8,
+  },
+  {
+    id: 'cool-night-leather',
+    name: 'The Cool Night Leather',
+    fragrances: ['ombre-leather', 'vibrant-leather'],
+    ratio: '1 spray OL on fabric : 1 spray VL on skin',
+    order: 'Ombré Leather on fabric first, Vibrant Leather on skin second',
+    result: 'VL\'s fruity citrus brightness lifts OL\'s serious suede. The patchouli-amber base breathes without becoming oppressive when temps drop below 20°C.',
+    pereira: 'Evening only — after 7pm when temperatures fall. This is when the Tom Ford finally gets to perform.',
+    contextLabel: 'Evenings · Below 20°C',
+    contexts: ['evening'],
+    rating: 8,
+  },
+  {
+    id: 'elevated-evening',
+    name: 'The Elevated Evening',
+    fragrances: ['bleu-de-chanel', 'man-in-black'],
+    ratio: '1 spray MiB on fabric : 2 sprays BdC on skin',
+    order: 'Man in Black on fabric first, BdC on skin second',
+    result: 'BdC\'s citrus top cuts MiB\'s rum-spice-tobacco opening and makes it approachable. MiB contributes deep tonka-benzoin base that enriches BdC\'s cleaner structure.',
+    pereira: 'The only safe way to use Man in Black in Pereira outside pure AC. BdC acts as a fresh citrus buffer. AC venues only.',
+    contextLabel: 'AC evenings · Date nights',
+    contexts: ['evening'],
+    rating: 8,
+  },
+  {
+    id: 'rainy-day-oriental',
+    name: 'The Rainy Day Oriental',
+    fragrances: ['bleu-de-chanel', 'cdnu'],
+    ratio: '2 sprays BdC on skin : 1 spray CDNU on fabric',
+    order: 'CDNU on fabric first, BdC on skin second',
+    result: 'CDNU\'s saffron-ambergris adds oriental depth and warmth to BdC\'s clean woody structure. The cooler rain lets this bloom without going cloying.',
+    pereira: 'Pereira\'s ~231 rainy days are your window. Rain reduces projection, so you can push slightly richer.',
+    contextLabel: 'Cool rainy days',
+    contexts: ['cool-rainy'],
+    rating: 8,
+  },
+  {
+    id: 'budget-depth-bomb',
+    name: 'The Budget Depth Bomb',
+    fragrances: ['vibrant-leather', 'cdnu'],
+    ratio: '2 sprays VL on skin : 1 spray CDNU on fabric',
+    order: 'CDNU on fabric first, Vibrant Leather on skin second',
+    result: 'CDNU\'s saffron-fir resin gives VL the depth and staying power it normally lacks. Humidity makes CDNU\'s ambergris last all evening.',
+    pereira: 'Wear after 7pm when temps drop below 20°C. CDNU\'s oriental richness is manageable at that temperature.',
+    contextLabel: 'Casual evenings',
+    contexts: ['evening'],
+    rating: 7,
+  },
+  {
+    id: 'budget-evening',
+    name: 'The Budget Evening',
+    fragrances: ['amber-leather', 'starwalker'],
+    ratio: '1 spray A&L on fabric : 2 sprays Starwalker on skin',
+    order: 'Amber & Leather on fabric first, Starwalker on skin second',
+    result: 'Starwalker\'s bamboo-ginger freshness lifts A&L\'s dark cardamom-leather core and makes it more tropical-friendly. A budget version of the Cool Night Leather combo.',
+    pereira: 'Saves the Tom Ford bottle for special occasions. Same structural logic, budget execution.',
+    contextLabel: 'Casual evenings · Rainy',
+    contexts: ['evening', 'cool-rainy'],
+    rating: 7,
+  },
+  {
+    id: 'rainy-iris',
+    name: 'The Rainy Iris',
+    fragrances: ['dior-homme-intense', 'bleu-de-chanel'],
+    ratio: '1 spray DHI on fabric : 2 sprays BdC on skin',
+    order: 'DHI on fabric first, BdC on skin second',
+    result: 'BdC\'s woody citrus lifts DHI\'s heavy iris-pear heart, giving it the lightness it needs to work in Pereira. DHI adds a floral iris dimension BdC normally lacks.',
+    pereira: 'DHI almost never earns a solo wear in Pereira. Layered under BdC on a cool rainy morning, it finally does.',
+    contextLabel: 'Cool rainy mornings only',
+    contexts: ['cool-rainy'],
+    rating: 7,
+  },
+  {
+    id: 'ac-night-bomb',
+    name: 'The AC Night Bomb',
+    fragrances: ['man-in-black', 'cdnu'],
+    ratio: '1 spray CDNU on fabric : 1 spray MiB on fabric',
+    order: 'Both on fabric only — CDNU first, MiB second. Never on bare skin.',
+    result: 'CDNU\'s saffron-ambergris amplifies MiB\'s oriental rum-leather core without note clashing. Very rich, very deep — built for cold rooms only.',
+    pereira: 'Strictly for 14–17°C nights in fully air-conditioned venues. Both on fabric. Never outdoors.',
+    contextLabel: 'AC only · Cold nights',
+    contexts: ['evening'],
+    rating: 7,
+  },
+  {
+    id: 'evening-elixir',
+    name: 'The Evening Elixir',
+    fragrances: ['sauvage-elixir', 'bleu-de-chanel'],
+    ratio: '1 spray Elixir on fabric : 2 sprays BdC on skin',
+    order: 'Elixir on fabric first, BdC on skin second',
+    result: 'BdC\'s clean citrus-woody structure dilutes Elixir\'s nuclear licorice-spice opening. The only responsible way to deploy Sauvage Elixir in Pereira.',
+    pereira: 'Requires a fully air-conditioned venue. Never outdoors. The last resort for Elixir wearers — it finally earns its place here.',
+    contextLabel: 'AC only · Never outdoors',
+    contexts: ['evening'],
+    rating: 6,
+  },
+];
+
+const NEVER_LAYER = [
+  {
+    names: 'Ombré Leather + Man in Black',
+    reason: 'Two competing dark leather-oriental bases — produces mud, not complexity.',
+  },
+  {
+    names: 'Sauvage EDP + Bleu de Chanel EDP',
+    reason: 'Both are Ambroxan-heavy. Doubling up creates an amplified synthetic cloud.',
+  },
+  {
+    names: 'Sauvage Elixir + Man in Black',
+    reason: 'Nuclear. Licorice-spice on top of rum-tonka-benzoin is offensive in any climate.',
+  },
+  {
+    names: 'Any 3-way combination',
+    reason: 'Pereira\'s heat merges everything into a flat accord before the layers can set.',
+  },
+];
+
+/* ─── Context rules ──────────────────────────────────────── */
+const CONTEXTS = [
+  {
+    id: 'hot-sunny',
+    label: 'Hot Sunny Day',
+    title: 'Keep it light and fresh',
+    match: c => (c.temp >= 25 || c.apparent >= 28) && !c.rain && c.hour >= 11 && c.hour < 19,
+    wear: ['bleu-de-chanel', 'vibrant-leather', 'starwalker'],
+    sprays: {
+      'bleu-de-chanel':  '2 sprays max — humidity carries it further than you expect',
+      'vibrant-leather': '3 sprays on skin + 1 on collar fabric',
+      'starwalker':      '3 sprays on skin',
+    },
+    avoid: ['sauvage-elixir', 'man-in-black', 'ombre-leather', 'dior-homme-intense'],
+    tip: 'Heat amplifies every fragrance. Spray on fabric (collar) or back of neck — not inner wrist. Top notes burn off faster than reviews suggest in this heat. 2 sprays here equals 3 in a cooler climate.',
+  },
+  {
+    id: 'cool-rainy',
+    label: 'Cool Rainy Day',
+    title: 'Rainy days are gifts — go slightly heavier',
+    match: c => c.rain && c.temp < 22,
+    wear: ['bleu-de-chanel', 'ombre-leather', 'man-in-black', 'dior-homme-intense'],
+    sprays: {
+      'bleu-de-chanel':     '2–3 sprays on skin',
+      'ombre-leather':      '1–2 sprays on fabric only',
+      'man-in-black':       '1–2 sprays on fabric only',
+      'dior-homme-intense': '1–2 sprays on fabric',
+    },
+    avoid: ['sauvage-elixir'],
+    tip: 'Rain drops temperatures to 17–21°C and cuts UV load. This is your window for the leathers. Rain also reduces projection — you can push a touch heavier.',
+  },
+  {
+    id: 'warm-rainy',
+    label: 'Warm Rainy Day',
+    title: 'Warm rain — one step above the heat bloc',
+    match: c => c.rain && c.temp >= 22,
+    wear: ['bleu-de-chanel', 'sauvage-edp', 'starwalker'],
+    sprays: {
+      'bleu-de-chanel': '2–3 sprays on skin',
+      'sauvage-edp':    '2 sprays on skin — rain cuts its Ambroxan sillage to manageable',
+      'starwalker':     '3 sprays on skin',
+    },
+    avoid: ['sauvage-elixir', 'man-in-black', 'ombre-leather'],
+    tip: 'Warm rain (22°C+) keeps it tolerable but stays humid. Rain reduces projection 15–20% — you can push one step above the dry-heat limit. Sauvage EDP earns its place here. Spray on back of neck or fabric so the rain doesn\'t turn your pulse points sour.',
+  },
+  {
+    id: 'morning',
+    label: 'Morning / Office',
+    title: 'Best window of the day',
+    match: c => c.hour >= 6 && c.hour < 11 && !c.rain,
+    wear: ['bleu-de-chanel', 'sauvage-edp', 'starwalker', 'vibrant-leather'],
+    sprays: {
+      'bleu-de-chanel':  '2–3 sprays on skin',
+      'sauvage-edp':     '2 sprays only — Ambroxan gets aggressive in humidity',
+      'starwalker':      '3–4 sprays on skin',
+      'vibrant-leather': '3 sprays on skin',
+    },
+    avoid: ['sauvage-elixir', 'man-in-black'],
+    tip: 'Coolest and most pleasant window of the day. Your full A and S freshers work here. Best placement: back of neck + shirt collar. Spray on slightly damp skin — top notes evaporate faster at elevation than reviews suggest. Heavy orientals wait for evening.',
+  },
+  {
+    id: 'evening',
+    label: 'Evening Out',
+    title: 'Leather-oriental window is open',
+    match: c => c.hour >= 19 || c.hour < 6,
+    wear: ['ombre-leather', 'man-in-black', 'bleu-de-chanel', 'sauvage-edp'],
+    sprays: {
+      'ombre-leather':  '1–2 sprays on fabric only',
+      'man-in-black':   '1–2 sprays on fabric only',
+      'bleu-de-chanel': '2 sprays on skin',
+      'sauvage-edp':    '2 sprays on skin',
+    },
+    avoid: ['sauvage-elixir'],
+    tip: 'Pereira nights hit 14–17°C. This is when your B-tier orientals finally earn their place. Spray on fabric only for the heavy ones — humidity is still 70%+ even at night. Hair application extends longevity if you want the trail to last past midnight.',
+  },
+  {
+    id: 'afternoon',
+    label: 'Warm Afternoon',
+    title: 'Stay fresh, stay restrained',
+    match: () => true,
+    wear: ['bleu-de-chanel', 'starwalker', 'vibrant-leather'],
+    sprays: {
+      'bleu-de-chanel':  '2 sprays on skin',
+      'starwalker':      '3 sprays on skin',
+      'vibrant-leather': '3 sprays on skin',
+    },
+    avoid: ['sauvage-elixir', 'man-in-black'],
+    tip: 'Peak heat block. Spray on fabric or back of neck — not inner wrist. Reserve heavier fragrances for after 7pm when temperatures drop. (August is your driest month at 66% humidity — slightly more latitude than other months.)',
+  },
+];
+
+/* ─── Weather helpers ─────────────────────────────────────── */
+const WX_LABELS = [
+  [0,  0,  'Clear sky',        false],
+  [1,  1,  'Mainly clear',     false],
+  [2,  2,  'Partly cloudy',    false],
+  [3,  3,  'Overcast',         false],
+  [45, 48, 'Foggy',            false],
+  [51, 55, 'Drizzle',          true],
+  [56, 57, 'Freezing drizzle', true],
+  [61, 65, 'Rain',             true],
+  [71, 77, 'Snow',             false],
+  [80, 82, 'Rain showers',     true],
+  [85, 86, 'Snow showers',     false],
+  [95, 99, 'Thunderstorm',     true],
+];
+
+function wxInfo(code) {
+  for (const [lo, hi, label, rain] of WX_LABELS) {
+    if (code >= lo && code <= hi) return { label, rain };
+  }
+  return { label: 'Variable', rain: false };
+}
+
+function fmtTime(iso) {
+  const d = new Date(iso + ':00');
+  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
+/* ─── Renderers ─────────────────────────────────────────── */
+function renderWeather(w, loc) {
+  const { label, rain } = wxInfo(w.weather_code);
+  const uvStr   = w.uv_index != null ? Math.round(w.uv_index) : '—';
+  const windStr = w.wind_speed_10m != null ? Math.round(w.wind_speed_10m) : '—';
+
+  const roundedTemp     = Math.round(w.temperature_2m);
+  const roundedApparent = w.apparent_temperature != null ? Math.round(w.apparent_temperature) : null;
+  const feelsStr = (roundedApparent != null && Math.abs(roundedApparent - roundedTemp) >= 1)
+    ? `<div class="lbl" style="font-size:10px;margin-top:3px;color:var(--text-faint)">feels ${roundedApparent}°</div>`
+    : '';
+
+  const altStr  = loc.altitude != null ? ` · ${loc.altitude}m` : '';
+  const awayChip = loc.isHome ? '' : `<span class="away-chip">↗ Away</span>`;
+
+  return `
+    <div class="weather-card">
+      <div class="weather-stats">
+        <div class="w-stat">
+          <div class="val">${roundedTemp}<sup>°C</sup></div>
+          <div class="lbl">Temperature</div>
+          ${feelsStr}
+        </div>
+        <div class="w-stat">
+          <div class="val">${w.relative_humidity_2m}<sup>%</sup></div>
+          <div class="lbl">Humidity</div>
+        </div>
+        <div class="w-stat">
+          <div class="val">${windStr}</div>
+          <div class="lbl">Wind km/h</div>
+        </div>
+        <div class="w-stat">
+          <div class="val">${uvStr}</div>
+          <div class="lbl">UV Index</div>
+        </div>
+      </div>
+      <div class="weather-footer">
+        <div class="weather-dot ${rain ? 'rain' : ''}"></div>
+        <span>${label} · ${loc.name}${altStr}</span>
+        ${awayChip}
+        <span class="weather-updated">Updated ${fmtTime(w.time)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderReco(ctx, loc) {
+  const cards = ctx.wear.map((id, i) => {
+    const f = FRAGS.find(x => x.id === id);
+    if (!f) return '';
+    return `
+      <div class="reco-card ${i === 0 ? 'top-pick' : ''}">
+        <div class="reco-main">
+          <div class="reco-name">${f.name}</div>
+          <div class="reco-house">${f.house} · ${f.family}</div>
+          <div class="reco-spray">${ctx.sprays[id] || f.spray}</div>
+          <div class="reco-verdict">${f.verdict}</div>
+        </div>
+        <div class="reco-score">
+          <div class="num">${f.rating}</div>
+          <div class="denom">/10</div>
+          <div class="conc">${f.conc}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const avoidTags = ctx.avoid.map(id => {
+    const f = FRAGS.find(x => x.id === id);
+    return f ? `<div class="avoid-tag">${f.name}</div>` : '';
+  }).join('');
+
+  const altNote = altitudeNote(loc.altitude);
+  const altHTML = altNote ? `<div class="alt-note">${altNote}</div>` : '';
+
+  return `
+    <div class="section-eyebrow">${ctx.label}</div>
+    <div class="section-title">${ctx.title}</div>
+    <div class="reco-stack">${cards}</div>
+    <div class="tip-box">${ctx.tip}</div>
+    ${altHTML}
+    <div class="avoid-row">
+      <div class="avoid-label">Skip today</div>
+      <div class="avoid-tags">${avoidTags}</div>
+    </div>
+    <div class="divider"></div>
+  `;
+}
+
+function layerCard(l, featured) {
+  const [a, b] = l.fragrances.map(id => FRAGS.find(f => f.id === id));
+  return `
+    <div class="layer-card ${featured ? 'featured' : ''}">
+      <div class="layer-card-top">
+        <div>
+          <div class="layer-name">${l.name}</div>
+          <div class="layer-frags">
+            <div class="layer-pill">${a.name}<span class="conc">${a.conc}</span></div>
+            <div class="layer-plus">+</div>
+            <div class="layer-pill">${b.name}<span class="conc">${b.conc}</span></div>
+          </div>
+        </div>
+        <div class="layer-score-block">
+          <div class="layer-score">${l.rating}<span>/10</span></div>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-context-chip">${l.contextLabel}</div>
+        <div class="layer-ratio">${l.ratio}</div>
+        <div class="layer-order">${l.order}</div>
+        <div class="layer-result">${l.result}</div>
+        <div class="layer-pereira">${l.pereira}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderLayering(contextId) {
+  const featured = LAYERINGS.filter(l => l.contexts.includes(contextId));
+  const rest     = LAYERINGS.filter(l => !l.contexts.includes(contextId));
+
+  const featuredHTML = featured.map(l => layerCard(l, true)).join('');
+  const restHTML     = rest.map(l => layerCard(l, false)).join('');
+
+  const neverHTML = NEVER_LAYER.map(n => `
+    <div class="never-item">
+      <div class="never-names">${n.names}</div>
+      <div class="never-reason">${n.reason}</div>
+    </div>
+  `).join('');
+
+  const allCount = LAYERINGS.length;
+  const restCount = rest.length;
+
+  return `
+    <div class="section-eyebrow">Layering</div>
+    <div class="section-title">Today's combos for your collection</div>
+    <div class="layer-stack">${featuredHTML}</div>
+
+    <div class="all-layers-btn" id="all-layers-btn" onclick="toggleAllLayers()">
+      <span>All ${allCount} combos &amp; what never to mix</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="all-layers-body" id="all-layers-body">
+      ${restCount > 0 ? `<div class="layer-stack" style="margin-top:10px">${restHTML}</div>` : ''}
+      <div class="never-layer">
+        <div class="never-layer-title">Never layer these</div>
+        ${neverHTML}
+      </div>
+    </div>
+
+    <div class="divider" style="margin-top:28px"></div>
+  `;
+}
+
+function toggleAllLayers() {
+  document.getElementById('all-layers-btn').classList.toggle('open');
+}
+
+function renderCollection() {
+  const rows = FRAGS.map(f => `
+    <div class="frag-row" onclick="toggleRow('${f.id}')" id="row-${f.id}">
+      <div class="frag-row-header">
+        <div class="tier tier-${f.tier}">${f.tier}</div>
+        <div class="frag-info">
+          <div class="frag-name">${f.name}</div>
+          <div class="frag-house">${f.house}</div>
+        </div>
+        <div class="frag-meta">
+          <div class="frag-rating">${f.rating}<span>/10</span></div>
+          <div class="frag-conc">${f.conc}</div>
+        </div>
+        <div class="frag-chevron">▾</div>
+      </div>
+      <div class="frag-detail">
+        <div class="frag-tag">${f.tag}</div>
+        <div class="notes-table">
+          <div class="note-lbl">Top</div>   <div class="note-val">${f.top}</div>
+          <div class="note-lbl">Heart</div> <div class="note-val">${f.heart}</div>
+          <div class="note-lbl">Base</div>  <div class="note-val">${f.base}</div>
+        </div>
+        <div class="frag-verdict-text">"${f.verdict}"</div>
+        <div class="frag-spray-text">${f.spray}</div>
+      </div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="section-eyebrow">Full Collection</div>
+    <div class="section-title">10 Fragrances · Rated for Pereira</div>
+    <div class="collection">${rows}</div>
+  `;
+}
+
+function toggleRow(id) {
+  document.getElementById('row-' + id).classList.toggle('open');
+}
+
+/* ─── Location ───────────────────────────────────────────── */
+const HOME = { lat: 4.8143, lon: -75.6946, altitude: 1411 };
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2
+    + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.asin(Math.sqrt(a));
+}
+
+async function reverseGeocode(lat, lon) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`,
+      { headers: { 'Accept-Language': 'en' } }
+    );
+    const d = await res.json();
+    const city = d.address?.city || d.address?.town || d.address?.village || d.address?.county || 'Unknown';
+    const cc   = (d.address?.country_code || '').toUpperCase();
+    return cc ? `${city} · ${cc}` : city;
+  } catch {
+    return `${lat.toFixed(2)}°, ${lon.toFixed(2)}°`;
+  }
+}
+
+async function getAltitude(lat, lon) {
+  try {
+    const res = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
+    const d = await res.json();
+    return Math.round(d.elevation?.[0] ?? 0);
+  } catch {
+    return null;
+  }
+}
+
+async function detectLocation() {
+  return new Promise(resolve => {
+    const fallback = { lat: HOME.lat, lon: HOME.lon, name: 'Pereira · CO', isHome: true, altitude: HOME.altitude };
+    if (!navigator.geolocation) { resolve(fallback); return; }
+
+    navigator.geolocation.getCurrentPosition(
+      async pos => {
+        const { latitude: lat, longitude: lon } = pos.coords;
+        const isHome = haversineKm(lat, lon, HOME.lat, HOME.lon) < 5;
+        if (isHome) {
+          resolve({ lat, lon, name: 'Pereira · CO', isHome: true, altitude: HOME.altitude });
+          return;
+        }
+        const [name, altitude] = await Promise.all([reverseGeocode(lat, lon), getAltitude(lat, lon)]);
+        resolve({ lat, lon, name, isHome: false, altitude });
+      },
+      () => resolve(fallback),
+      { timeout: 8000 }
+    );
+  });
+}
+
+function altitudeNote(alt) {
+  if (alt == null) return '';
+  if (alt < 500)  return `${alt}m — sea-level. Performance guides apply as written.`;
+  if (alt < 1000) return `${alt}m — mild altitude effect. Top notes fade ~10% faster than at sea level.`;
+  if (alt < 1500) return `${alt}m — similar to Pereira. Top notes burn 15–20 min faster. +1 phantom spray for EDTs. Apply on damp skin.`;
+  if (alt < 2500) return `${alt}m — significant altitude. EDPs strongly preferred over EDTs. Apply on damp skin, add 1–2 sprays vs sea-level guides.`;
+  return `${alt}m — high altitude. Fragrance evaporates aggressively. EDP only. Spray on damp skin; double your usual count.`;
+}
+
+/* ─── Data fetch ─────────────────────────────────────────── */
+async function loadWeather(lat, lon) {
+  const url =
+    'https://api.open-meteo.com/v1/forecast' +
+    `?latitude=${lat}&longitude=${lon}` +
+    '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,apparent_temperature,wind_speed_10m' +
+    '&hourly=uv_index' +
+    '&timezone=auto' +
+    '&forecast_days=1';
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+
+  const cur  = data.current;
+  const hour = parseInt(cur.time.split('T')[1].split(':')[0], 10);
+  cur.uv_index = data.hourly?.uv_index?.[hour] ?? null;
+  cur._hour    = hour;
+  return cur;
+}
+
+/* ─── Init ───────────────────────────────────────────────── */
+async function init() {
+  const weatherZone  = document.getElementById('weather-zone');
+  const recoZone     = document.getElementById('reco-zone');
+  const layeringZone = document.getElementById('layering-zone');
+  const collZone     = document.getElementById('collection-zone');
+
+  try {
+    const loc = await detectLocation();
+    document.getElementById('location-name').textContent = loc.name;
+
+    const w = await loadWeather(loc.lat, loc.lon);
+    const conditions = {
+      temp:     w.temperature_2m,
+      apparent: w.apparent_temperature ?? w.temperature_2m,
+      humidity: w.relative_humidity_2m,
+      rain:     w.weather_code >= 51,
+      hour:     w._hour,
+      wind:     w.wind_speed_10m ?? 0,
+      month:    new Date().getMonth() + 1,
+    };
+
+    const ctx = CONTEXTS.find(c => c.match(conditions));
+
+    weatherZone.innerHTML  = renderWeather(w, loc);
+    recoZone.innerHTML     = renderReco(ctx, loc);
+    layeringZone.innerHTML = renderLayering(ctx.id);
+    collZone.innerHTML     = renderCollection();
+
+  } catch (err) {
+    document.getElementById('location-name').textContent = 'Pereira · CO';
+    weatherZone.innerHTML = `
+      <div class="error-card">
+        Could not load weather data (${err.message}).<br>
+        Check your internet connection and reload the page.
+      </div>
+    `;
+    layeringZone.innerHTML = renderLayering('afternoon');
+    collZone.innerHTML     = renderCollection();
+  }
+}
+
+function refresh() {
+  document.getElementById('location-name').textContent = 'detecting…';
+  document.getElementById('weather-zone').innerHTML = '<div class="skeleton"></div>';
+  document.getElementById('reco-zone').innerHTML = '';
+  document.getElementById('layering-zone').innerHTML = '';
+  init();
+}
+
+init();
+</script>
+</body>
+</html>
